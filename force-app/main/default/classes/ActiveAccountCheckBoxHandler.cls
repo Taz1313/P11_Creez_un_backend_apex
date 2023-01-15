@@ -1,21 +1,17 @@
-public with sharing class ActiveAccountCheckBoxHandler {
-    // Méthode pour mettre à jour le champ Actif__c de tous les comptes
+public class ActiveAccountCheckBoxHandler {
+    // Méthode pour mettre à jour le champ Actif__c pour tous les comptes
     public static void updateActiveField() {
-        // Requête pour récupérer une liste de comptes qui ont des commandes associées
-        List<Account> accountsWithOrders = [
-            SELECT Id FROM Account WHERE Id IN (
-            SELECT AccountId FROM Order
-            )
+        // Récupération de tous les comptes et leurs commandes associées en utilisant une requête SOQL
+        List<Account> accounts = [
+            SELECT Id, (SELECT Id FROM Orders) FROM Account
         ];
     
-        // Requête pour récupérer tous les comptes
-        List<Account> allAccounts = [SELECT Id FROM Account];
-    
-        // Pour chaque compte, définir le champ Actif__c sur true si le compte a des commandes associées, sinon sur false
-        for (Account a : allAccounts) {
-            a.Actif__c = accountsWithOrders.contains(a);
+        // Boucle pour parcourir tous les comptes
+        for (Account a : accounts) {
+            // Si un compte a au moins une commande associée, alors Actif__c est mis à true, sinon à false
+            a.Actif__c = a.Orders.size() > 0;
         }
-        // Mettre à jour la liste de tous les comptes en base de données
-        update allAccounts;
+        // Mise à jour de tous les comptes en base de données
+        update accounts;
     }
 }

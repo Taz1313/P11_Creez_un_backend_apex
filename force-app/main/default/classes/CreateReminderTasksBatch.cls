@@ -18,9 +18,10 @@ global class CreateReminderTasksBatch implements Database.Batchable<SObject> {
                 Task task = new Task(
                     OwnerId = account.OwnerId,
                     Subject = 'Call',
-                    Status = 'New',
+                    Status = 'Not Started',
                     Priority = 'Normal',
                     WhatId = account.Id,
+                    IsReminderSet = true,
                     ReminderDateTime = DateTime.now().addDays(5)
                 );
                 // Ajout de la tâche à la liste de tâches à créer

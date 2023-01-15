@@ -3,8 +3,8 @@ trigger OrderStatusTrigger on Order (before update, after insert, after delete) 
     if (Trigger.isInsert || Trigger.isDelete) {
         ActiveAccountCheckBoxHandler.updateActiveField();
     }
-    // Si l'opération est une mise à jour et pas une suppression
-    if (Trigger.isUpdate && !Trigger.isDelete) {
+    // Si l'opération est une mise à jour
+    if (Trigger.isUpdate) {
         CheckOrderStatusHandler.checkStatus(Trigger.new);
     }
 }
